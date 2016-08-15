@@ -62,7 +62,7 @@ def downloadComic(comic_link):      # 下载图片
             imglist.append(y)
     for z in range(len(imglist)):      # 用range是因为要重命名图片为后面打包做准备
         img = requests.get(imglist[z-1])
-        with open(str(z)+'.jpg', 'wb') as f: # 图片wb模式写入 binary
+        with open(format(z,'03')+'.jpg', 'wb') as f: # 图片wb模式写入 binary
             f.write(img.content)
     os.chdir('..')
 
@@ -70,7 +70,7 @@ def getSourcePageNumber():
     source = requests.get('http://www.177pic.info/html/category/tt/page/1')
     sourcesoup = BeautifulSoup(source.text,'lxml')
     sourcepage = sourcesoup.find(attrs={'class':'wp-pagenavi'})
-    source_page_number = int(sourcepage.contents[-2]['href'].splite('/')[-1])
+    source_page_number = int(sourcepage.contents[-2]['href'].split('/')[-1])
     return source_page_number
 
 
@@ -87,7 +87,7 @@ def main(): # main 模块
             recode = trecode.split('/')
             print('上次停止在第{0}页'.format(recode))
     url = 'http://www.177pic.info/html/category/tt'
-    total_page = getSourcePageNumber   
+    total_page = getSourcePageNumber()
     url_list = []
     for i in range(int(recode[-1]), total_page):    # 根据记录选择开始页面
         url_list.append(url+'/page/'+str(i+1))
@@ -124,4 +124,4 @@ def main(): # main 模块
                     os.system('clear')
 
 if __name__ == '__main__':
-    main(url_list)
+    main()
